@@ -11,7 +11,15 @@
 namespace chromaprint {
 
 inline size_t GetUnpackedInt5ArraySize(size_t size) {
-	return size * 8 / 5;
+    size_t output = (size / 5) * 8;
+    switch (size % 5) {
+        case 4: output += 6; break;
+        case 3: output += 4; break;
+        case 2: output += 3; break;
+        case 1: output += 1; break;
+        default: break;
+    }
+    return output;
 }
 
 template <typename InputIt, typename OutputIt>
