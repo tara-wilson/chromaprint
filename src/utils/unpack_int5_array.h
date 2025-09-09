@@ -11,6 +11,7 @@
 namespace chromaprint {
 
 inline size_t GetUnpackedInt5ArraySize(size_t size) {
+	fprintf(stderr, "[CHROMAPRINT] called patched GetUnpackedInt5ArraySize(%zu)\n", size);
     size_t output = (size / 5) * 8;
     switch (size % 5) {
         case 4: output += 6; break;
