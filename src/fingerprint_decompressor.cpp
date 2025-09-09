@@ -89,8 +89,13 @@ bool FingerprintDecompressor::Decompress(const std::string &input)
 	}
 
 	if (num_exceptional_bits) {
-		m_exceptional_bits.resize(GetUnpackedInt5ArraySize(GetPackedInt5ArraySize(num_exceptional_bits)));
-		UnpackInt5Array(input.begin() + offset, input.end(), m_exceptional_bits.begin());
+		m_exceptional_bits.clear();
+		UnpackInt5Array(input.begin() + offset, input.end(), std::back_inserter(m_exceptional_bits));
+
+		// Optional safety check:
+		if (m_exceptional_bits.size() < num_exceptional_bits) {
+			throw std::runtime_error("Unpacked too few exceptional bits — possibly malformed input.");
+		}
 		for (size_t i = 0, j = 0; i < m_bits.size(); i++) {
 			if (m_bits[i] == kMaxNormalValue) {
 				m_bits[i] += m_exceptional_bits[j++];
